@@ -3,6 +3,7 @@ import string
 import pyperclip
 import time
 import json
+from pathlib import Path
 
 
 def generate_password(lenght, use_digits, use_uppercase, use_lower, use_punctuation):
@@ -73,7 +74,8 @@ def main():
     while True:
         print('--- Генератор паролей ---')
         print('1. Сгенерировать новый пароль')
-        print('2. Выход')
+        print('2. Посмотреть все пароли')
+        print('3. Выход')
         print()
 
         choise = input('Выберите действие (цифру): ').strip()
@@ -126,10 +128,18 @@ def main():
                 save_passwords(passwords, service, login, password)
  
         elif choise == '2':
+            if not passwords:
+                print("Сохранённых паролей нет.")
+            else:
+                print("\nСохранённые пароли:")
+                for idx, entry in enumerate(passwords, 1):
+                     print(f"{idx}. Сервис: {entry['service']}, Логин: {entry['login']}, Пароль: {entry['password']}")
+                     print()
+        elif choise == '3':
             print("До свидания!")
             break
         else:
-            print("Неверный выбор. Пожалуйста, введите 1 или 2.")
+            print("Неверный выбор. Пожалуйста, введите 1 или 2 или 3.")
 
 
 if __name__ == '__main__':
