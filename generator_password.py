@@ -40,7 +40,36 @@ def get_yes_no(prompt):
         else:
             print("Пожалуйста, введите 'да' или 'нет'.")
 
+# Загрузка пароля
+def load_passwords(filename='passwords.json'):
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return []
+    except json.JSONDecodeError:
+        print('Файл повреждён, начинаем с пустого списка.')
+        return []
+
+# Сохранение пароля
+def save_passwords(passwords, service, login, password, filename='passwords.json'):
+    new_entry = {
+        'service': service,
+        'login': login,
+        'password': password
+    }
+
+    passwords.append(new_entry)
+
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(passwords, f, ensure_ascii=False, indent=4)
+        print("Пароль успешно сохранён!")
+    except Exception as e:
+        print(f"Ошибка при сохранении: {e}")
+
 def main():
+    passwords = load_passwords()
     while True:
         print('--- Генератор паролей ---')
         print('1. Сгенерировать новый пароль')
@@ -90,17 +119,12 @@ def main():
                 print()
 
             if get_yes_no('Сохранить пароль? (да/нет): '):
-                save_password = {}
-
                 service = input('Введите сервис: ')
                 login = input('Введите логин: ')
                 password = password
 
-                save_password['service'] = service
-                save_password['login'] = login
-                save_password['password'] = password
-
-                
+                save_passwords(passwords, service, login, password)
+ 
         elif choise == '2':
             print("До свидания!")
             break
